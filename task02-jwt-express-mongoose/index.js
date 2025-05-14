@@ -29,7 +29,7 @@ mongoose
       res.send({ message: "Main page" });
     });
 
-    app.post("/signin", (request, response) => {
+    app.post("/signup", (request, response) => {
       console.log(request.body);
       console.log(request.body.email);
       console.log(request.body.password);
