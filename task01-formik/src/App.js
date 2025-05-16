@@ -2,22 +2,14 @@ import { Formik, Form, Field } from 'formik';
 import './App.css';
 
 function App() {
+  initialValues = { email: "", password: "" };
+  const onSubmit = (values) => console.log(values);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+
+      </Formik>
     </div>
   );
 }
