@@ -12,10 +12,6 @@ code {
     monospace;
 }
 
-.errorMessage {
-  min-height: 20px;
-}
-
 .contentBlock {
   min-height: 25px;
   padding: 5px 0px;

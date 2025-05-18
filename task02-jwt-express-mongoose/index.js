@@ -51,6 +51,25 @@ mongoose
       }
     });
 
+    app.post("/signin", (request, response) => {
+      if (request.body && request.body.email && request.body.password) {
+        User.findOne({ email: request.body.email })
+          .then((user) => {
+            bcrypt.compare(request.body.password, user.password).then((result) => {
+              if (result) {
+                response.status(200).send({ message: "Email was found" });
+              } else {
+                response.status(401).send({ message: "Unauthorized Access" });
+              }
+            })
+          })
+          .catch(err => {
+            response.status(500).send({ error: err });
+            console.error(err);
+          })
+      }
+    });
+
     const PORT = 3000;
     app.listen(PORT, () => console.log(`Server started at port ${PORT}`));
   })
