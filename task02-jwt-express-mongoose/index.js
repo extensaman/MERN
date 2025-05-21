@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const app = express();
+
+const secret = "secret";
 
 const errorHandler = (err, _, res, __) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
@@ -57,7 +60,8 @@ mongoose
           .then((user) => {
             bcrypt.compare(request.body.password, user.password).then((result) => {
               if (result) {
-                response.status(200).send({ message: "Email was found" });
+                const token = jwt.sign({ user: user.email, _id: user._id }, secret, { expiresIn: "1h" });
+                response.status(200).send({ message: "You are welcome!", token: token });
               } else {
                 response.status(401).send({ message: "Unauthorized Access" });
               }
@@ -67,6 +71,8 @@ mongoose
             response.status(500).send({ error: err });
             console.error(err);
           })
+      } else {
+        response.sendStatus(400);
       }
     });
 
