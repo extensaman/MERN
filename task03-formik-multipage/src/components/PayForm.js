@@ -1,10 +1,12 @@
+import { Field } from 'formik';
+
 const PayForm = () => {
     return (
         <div>
-            <label htmlFor="card-number">Номер карты:</label>
-            <input type="text" id="card-number" name="card-number" />
+            <label htmlFor="cardNumber">Номер карты:</label>
+            <Field type="text" id="card-number" name="cardNumber" />
             <label htmlFor="expire">Срок действия:</label>
-            <input type="text" id="expire" name="expire" />
+            <Field type="text" id="expire" name="expire" />
         </div>
     )
 }

@@ -1,10 +1,13 @@
+import { ErrorMessage, Field } from 'formik';
 const FioForm = () => {
     return (
         <div>
             <label htmlFor="name">Имя:</label>
-            <input type="text" id="name" name="name" />
+            <Field type="text" id="name" name="name" />
+            <ErrorMessage name='name' />
             <label htmlFor="surname">Фамилия:</label>
-            <input type="text" id="surname" name="surname" />
+            <Field type="text" id="surname" name="surname" />
+            <ErrorMessage name='surname' />
         </div>
     )
 }
