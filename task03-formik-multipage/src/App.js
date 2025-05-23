@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import ChooseForm from "./components/ChooseForm";
@@ -12,7 +12,7 @@ function App() {
     city: "",
     street: "",
     house: "",
-    card: "",
+    cardNumber: "",
     expire: "",
   };
 
@@ -20,6 +20,10 @@ function App() {
 
   const nextPage = () => {
     if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
   };
 
   const onSubmit = (values) => console.log(values);
@@ -33,24 +37,38 @@ function App() {
 
   return (
     <div>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        validationSchema={validateSchema}
-      >
+      <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ values }) => {
           return (
             <Form>
               <h1>{pages[currentPage]}</h1>
               <ChooseForm page={currentPage} />
+
               <button
+                type="button"
+                onClick={prevPage}
+                disabled={currentPage === 0}
+              >
+                Prev page
+              </button>
+
+              <button
+                type="button"
                 onClick={nextPage}
                 disabled={currentPage === pages.length - 1}
               >
                 Next page
               </button>
-              <button type="submit">Enter</button>
-              <div>{values.email}</div>
+
+              <button
+                type="submit"
+                style={{
+                  visibility:
+                    currentPage === pages.length - 1 ? "visible" : "hidden",
+                }}
+              >
+                Enter
+              </button>
             </Form>
           );
         }}
