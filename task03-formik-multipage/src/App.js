@@ -61,13 +61,6 @@ function App() {
 
               <button
                 type="button"
-                onClick={prevPage}
-                disabled={currentPage === 0}
-              >
-                PrevPage
-              </button>
-              <button
-                type="button"
                 onClick={nextPage}
                 disabled={currentPage === pages.length - 1}
               >
