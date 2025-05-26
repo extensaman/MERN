@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import Button from "@mui/material/Button";
 import * as Yup from "yup";
 
 function App() {
@@ -26,7 +27,9 @@ function App() {
 
   return (
     <div>
-      <form onSubmit={formik.handleSubmit}></form>
+      <form onSubmit={formik.handleSubmit}>
+        <Button variant="outlined">Hello, MUI</Button>
+      </form>
     </div>
   );
 }
