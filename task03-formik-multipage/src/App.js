@@ -2,6 +2,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import ChooseForm from "./components/ChooseForm";
+import GetValidationSchema from "./validation/validation_scemas";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,7 +20,9 @@ function App() {
   const pages = ["Name and surname", "Address", "Payment information"];
 
   const nextPage = () => {
-    if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+    if (currentPage < pages.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const prevPage = () => {
@@ -37,7 +40,11 @@ function App() {
 
   return (
     <div>
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={GetValidationSchema(currentPage)}
+      >
         {({ values }) => {
           return (
             <Form>
@@ -54,21 +61,19 @@ function App() {
 
               <button
                 type="button"
+                onClick={prevPage}
+                disabled={currentPage === 0}
+              >
+                PrevPage
+              </button>
+              <button
+                type="button"
                 onClick={nextPage}
                 disabled={currentPage === pages.length - 1}
               >
-                Next page
+                NextPage
               </button>
-
-              <button
-                type="submit"
-                style={{
-                  visibility:
-                    currentPage === pages.length - 1 ? "visible" : "hidden",
-                }}
-              >
-                Enter
-              </button>
+              <button type="submit">Enter</button>
             </Form>
           );
         }}
