@@ -16,3 +16,8 @@ code {
   min-height: 25px;
   padding: 5px 0px;
 }
+
+.input-error {
+  border: 1px solid red;
+  background-color: #ffe5e5;
+}
