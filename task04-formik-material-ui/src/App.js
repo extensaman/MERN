@@ -30,6 +30,7 @@ function App() {
     <div>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          size="small"
           id="email"
           name="email"
           label="Введите адрес электронной почты"
@@ -40,6 +41,7 @@ function App() {
           helperText={formik.touched.email && formik.errors.email}
         />
         <TextField
+          size="small"
           id="password"
           name="password"
           type="password"
@@ -52,6 +54,7 @@ function App() {
         />
 
         <TextField
+          size="small"
           id="confirmPassword"
           name="confirmPassword"
           type="password"
