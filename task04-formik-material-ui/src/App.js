@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import Button from "@mui/material/Button";
 import * as Yup from "yup";
+import { TextField } from "@mui/material";
 
 function App() {
   const initialValues = { email: "", password: "", confirmPassword: "" };
@@ -28,6 +29,43 @@ function App() {
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
+        <TextField
+          id="email"
+          name="email"
+          label="Введите адрес электронной почты"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.email && formik.touched.email}
+          helperText={formik.touched.email && formik.errors.email}
+        />
+        <TextField
+          id="password"
+          name="password"
+          type="password"
+          label="Введите пароль"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.password && formik.touched.password}
+          helperText={formik.touched.password && formik.errors.password}
+        />
+
+        <TextField
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          label="Повторите пароль"
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={
+            formik.errors.confirmPassword && formik.touched.confirmPassword
+          }
+          helperText={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
+        />
         <Button variant="outlined">Hello, MUI</Button>
       </form>
     </div>

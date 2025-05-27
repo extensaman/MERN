@@ -58,7 +58,7 @@ function App() {
               <ErrorMessage name="confirmPassword" />
             </div>
             <button type="submit">Enter</button>
-            <div>{values.email}</div>
+            <div>{errors.email}</div>
           </Form>
         )}
       </Formik>
