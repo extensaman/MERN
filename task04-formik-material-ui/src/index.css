@@ -21,3 +21,7 @@ code {
   border: 1px solid red;
   background-color: #ffe5e5;
 }
+
+.text-field {
+  padding: 10% 0;
+}
