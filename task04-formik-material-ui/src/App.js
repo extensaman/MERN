@@ -28,7 +28,7 @@ function App() {
 
   return (
     <Grid container spacing={2}>
-      <Grid size={5} />
+      <Grid size="grow" />
       <Grid size={2}>
         <form onSubmit={formik.handleSubmit}>
           <TextField
@@ -78,11 +78,11 @@ function App() {
             }
           />
           <Button variant="outlined" fullWidth>
-            Hello, MUI
+            Войти
           </Button>
         </form>
       </Grid>
-      <Grid size={5} />
+      <Grid size="grow" />
     </Grid>
   );
 }
