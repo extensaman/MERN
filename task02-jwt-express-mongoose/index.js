@@ -58,25 +58,33 @@ mongoose
       if (request.body && request.body.email && request.body.password) {
         User.findOne({ email: request.body.email })
           .then((user) => {
-            bcrypt.compare(request.body.password, user.password).then((result) => {
-              if (result) {
-                const token = jwt.sign({ user: user.email, _id: user._id }, secret, { expiresIn: "1h" });
-                response.status(200).send({ message: "You are welcome!", token: token });
-              } else {
-                response.status(401).send({ message: "Unauthorized Access" });
-              }
-            })
+            bcrypt
+              .compare(request.body.password, user.password)
+              .then((result) => {
+                if (result) {
+                  const token = jwt.sign(
+                    { user: user.email, _id: user._id },
+                    secret,
+                    { expiresIn: "1h" }
+                  );
+                  response
+                    .status(200)
+                    .send({ message: "You are welcome!", token: token });
+                } else {
+                  response.status(401).send({ message: "Unauthorized Access" });
+                }
+              });
           })
-          .catch(err => {
+          .catch((err) => {
             response.status(500).send({ error: err });
             console.error(err);
-          })
+          });
       } else {
         response.sendStatus(400);
       }
     });
 
-    const PORT = 3000;
+    const PORT = 5000;
     app.listen(PORT, () => console.log(`Server started at port ${PORT}`));
   })
   .catch((err) => console.error(err));
