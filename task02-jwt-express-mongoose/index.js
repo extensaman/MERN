@@ -60,6 +60,7 @@ mongoose
       if (request.body && request.body.email && request.body.password) {
         User.findOne({ email: request.body.email })
           .then((user) => {
+            console.log(user);
             bcrypt
               .compare(request.body.password, user.password)
               .then((result) => {
