@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import * as Yup from "yup";
 import { Grid, TextField } from "@mui/material";
 import axios from "axios";
-import BaseUrl from "../Constants";
+import { BASE_URL } from "../constants";
 
 const SignUp = () => {
 
@@ -12,7 +12,7 @@ const SignUp = () => {
   const onSubmit = (values) => {
     console.log(values);
     axios
-      .post(BaseUrl + "/signup", values)
+      .post(BASE_URL + "/signup", values)
       .then((response) => {
         console.log(response);
       })
