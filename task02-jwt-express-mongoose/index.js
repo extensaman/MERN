@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const app = express();
 
 const secret = "secret";
@@ -26,6 +27,7 @@ mongoose
     const User = new mongoose.model("User", userSchema);
 
     app.use(express.json());
+    app.use(cors());
     app.use(errorHandler);
 
     app.get("/", (_, res) => {

@@ -2,22 +2,23 @@ import { useFormik } from "formik";
 import Button from "@mui/material/Button";
 import * as Yup from "yup";
 import { Grid, TextField } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 
 function App() {
-  const baseUrl = 'http://localhost:5000';
+  const baseUrl = "http://localhost:5000";
   const initialValues = { email: "", password: "", confirmPassword: "" };
 
   const onSubmit = (values) => {
     console.log(values);
-    axios.post(baseUrl + '/signup', values)
-      .then(response => {
+    axios
+      .post(baseUrl + "/signup", values)
+      .then((response) => {
         console.log(response);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
-      })
-  }
+      });
+  };
 
   const validateSchema = Yup.object({
     email: Yup.string()
@@ -88,7 +89,7 @@ function App() {
               formik.touched.confirmPassword && formik.errors.confirmPassword
             }
           />
-          <Button variant="outlined" fullWidth>
+          <Button type="submit" variant="outlined" fullWidth>
             Войти
           </Button>
         </form>
