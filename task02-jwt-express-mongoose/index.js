@@ -60,23 +60,30 @@ mongoose
       if (request.body && request.body.email && request.body.password) {
         User.findOne({ email: request.body.email })
           .then((user) => {
-            console.log(user);
-            bcrypt
-              .compare(request.body.password, user.password)
-              .then((result) => {
-                if (result) {
-                  const token = jwt.sign(
-                    { user: user.email, _id: user._id },
-                    secret,
-                    { expiresIn: "1h" }
-                  );
-                  response
-                    .status(200)
-                    .send({ message: "You are welcome!", token: token });
-                } else {
-                  response.status(401).send({ message: "Unauthorized Access" });
-                }
-              });
+            if (user) {
+              bcrypt
+                .compare(request.body.password, user.password)
+                .then((result) => {
+                  if (result) {
+                    const token = jwt.sign(
+                      { user: user.email, _id: user._id },
+                      secret,
+                      { expiresIn: "1h" }
+                    );
+                    response
+                      .status(200)
+                      .send({ message: "You are welcome!", token: token });
+                  } else {
+                    response
+                      .status(401)
+                      .send({ message: "Unauthorized Access. Wrong password" });
+                  }
+                });
+            } else {
+              response
+                .status(401)
+                .send({ message: "Unauthorized Access. Wrong username" });
+            }
           })
           .catch((err) => {
             response.status(500).send({ error: err });
