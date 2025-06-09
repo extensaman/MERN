@@ -5,14 +5,19 @@ import { Grid, TextField } from "@mui/material";
 import axios from "axios";
 import SignUp from "./components/SignUp";
 import { useState } from "react";
+import AthorizedData from "./components/AthorizedData";
+import BaseUrl from "./Constants";
 
 function App() {
   const { token, setToken } = useState(null);
 
-  axios.post("/", token).then((athorizedData) => {
-    return;
+  axios.post(BaseUrl, token).then((athorizedData) => {
+    if (athorizedData.message === "ATHORIZED DATA") {
+      return <AthorizedData data={athorizedData} />
+    }
+    else { return <SignUp />; }
   });
-  return <SignUp />;
+
   // const baseUrl = "http://localhost:5000";
   // const initialValues = { email: "", password: "", confirmPassword: "" };
 

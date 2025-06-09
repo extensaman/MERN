@@ -34,6 +34,30 @@ mongoose
       res.send({ message: "Main page" });
     });
 
+    app.post("/", (request, response) => {
+      if (request.body && request.body.token) {
+        console.log(request.body.token);
+        jwt.verify(request.body.token, secret, (err, payload) => {
+          if (err) {
+            response
+              .status(401)
+              .send({ message: "Unauthorized Access. Bad token", error: err });
+            return;
+          }
+          if (payload) {
+            response
+              .status(200)
+              .send({ message: "ATHORIZED DATA", data: "DATA IS HERE" });
+          }
+        })
+      } else {
+        console.log("No token");
+        response
+          .status(401)
+          .send({ message: "Unauthorized Access. No token" });
+      }
+    });
+
     app.post("/signup", (request, response) => {
       console.log(request.body);
       console.log(request.body.email);
