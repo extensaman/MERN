@@ -5,15 +5,17 @@ import { Grid, TextField } from "@mui/material";
 import axios from "axios";
 import { BASE_URL } from "../constants";
 
-const SignUp = () => {
-  const initialValues = { email: "", password: "", confirmPassword: "" };
+const SignIn = (props) => {
+  const initialValues = { email: "", password: "" };
 
   const onSubmit = (values) => {
     console.log(values);
     axios
-      .post(BASE_URL + "/signup", values)
+      .post(BASE_URL + "/signin", values)
       .then((response) => {
-        console.log(response);
+        console.log(response.data.token);
+        console.log(typeof props.setAppState);
+        props.setAppState({ token: response.data.token });
       })
       .catch((error) => {
         console.log(error);
@@ -27,9 +29,6 @@ const SignUp = () => {
     password: Yup.string()
       .min(6, "Не менее 6 символов")
       .required("Поле password обязательно"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Пароли должны совпадать")
-      .required("Поле подтверждения пароля обязательно"),
   });
 
   const formik = useFormik({
@@ -70,25 +69,6 @@ const SignUp = () => {
             error={formik.errors.password && formik.touched.password}
             helperText={formik.touched.password && formik.errors.password}
           />
-
-          <TextField
-            fullWidth
-            sx={{ my: "10px" }}
-            size="small"
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            label="Повторите пароль"
-            value={formik.values.confirmPassword}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.errors.confirmPassword && formik.touched.confirmPassword
-            }
-            helperText={
-              formik.touched.confirmPassword && formik.errors.confirmPassword
-            }
-          />
           <Button type="submit" variant="outlined" fullWidth>
             Войти
           </Button>
@@ -99,4 +79,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

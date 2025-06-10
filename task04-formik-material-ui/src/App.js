@@ -4,25 +4,58 @@ import * as Yup from "yup";
 import { Grid, TextField } from "@mui/material";
 import axios from "axios";
 import SignUp from "./components/SignUp";
-import { useState } from "react";
-import AthorizedData from "./components/AthorizedData";
+import { useState, useEffect } from "react";
+import AuthorizedData from "./components/AuthorizedData";
 import { BASE_URL } from "./constants";
 import ErrorComponent from "./components/ErrorComponent";
+import SignIn from "./components/SignIn";
 
 function App() {
-  const { token, setToken } = useState(null);
+  const [appState, setAppState] = useState({
+    loading: false,
+    authorized: false,
+    token: null,
+    data: null,
+  });
 
-  axios.post(BASE_URL, token)
-    .then((athorizedData) => {
-      if (athorizedData.message === "ATHORIZED DATA") {
-        return <AthorizedData data={athorizedData} />
-      }
-      else { return <SignUp />; }
-    })
-    .catch((err) => {
-      console.log(err);
-      return <ErrorComponent />;
-    });
+  useEffect(() => {
+    console.log("useEffect started");
+    setAppState({ loading: true });
+
+    axios
+      .post(BASE_URL, appState.token)
+      .then((authorizedData) => {
+        console.log(authorizedData);
+        if (authorizedData.data) {
+          setAppState({
+            loading: false,
+            authorized: true,
+            data: authorizedData.data,
+          });
+        } else {
+          setAppState({ loading: false, authorized: false, data: null });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setAppState({ loading: false, authorized: false, data: null });
+      });
+  }, [appState.token]);
+
+  return (
+    <>
+      <header>Header</header>
+      <div>{appState.loading ? <h2>LOADING...</h2> : null}</div>
+      <div>
+        {appState.authorized && appState.data ? (
+          <AuthorizedData data={appState.data} />
+        ) : (
+          <SignIn setAppState={setAppState} />
+        )}
+      </div>
+      <footer>Footer</footer>
+    </>
+  );
 
   // const baseUrl = "http://localhost:5000";
   // const initialValues = { email: "", password: "", confirmPassword: "" };
