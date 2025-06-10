@@ -23,7 +23,7 @@ function App() {
     setAppState({ loading: true });
 
     axios
-      .post(BASE_URL, appState.token)
+      .post(BASE_URL, { token: appState.token })
       .then((authorizedData) => {
         console.log(authorizedData);
         if (authorizedData.data) {
