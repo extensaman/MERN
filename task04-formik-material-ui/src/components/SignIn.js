@@ -23,7 +23,7 @@ const SignIn = (props) => {
 
   const validateSchema = Yup.object({
     email: Yup.string()
-      .email("Неверный формат email")
+      //.email("Неверный формат email")
       .required("Поле email обязательно"),
     password: Yup.string()
       .min(6, "Не менее 6 символов")
