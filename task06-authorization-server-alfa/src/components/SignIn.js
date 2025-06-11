@@ -13,7 +13,8 @@ const SignIn = (props) => {
     axios
       .post(BASE_URL + "/signin", values)
       .then((response) => {
-        console.log(response.data.token);
+        console.log(response.data);
+        localStorage.setItem("token", response.data.token);
         props.setAppState({ token: response.data.token });
       })
       .catch((error) => {
