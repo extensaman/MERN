@@ -11,43 +11,42 @@ export const AuthorizedContentLoader = () => {
 
   const [appState, setAppState] = useState({
     loading: false,
-    token: tokenFromLocalStorage,
     data: null,
   });
 
   useEffect(() => {
     console.log("useEffect started");
-    console.log("appState.token = " + appState.token);
     console.log("tokenFromLocalStorage = " + tokenFromLocalStorage);
     setAppState({ loading: true });
 
     axios
-      .post(BASE_URL, { token: appState.token })
+      .post(BASE_URL, { token: tokenFromLocalStorage })
       .then((authorizedData) => {
-        console.log(authorizedData);
+        console.log(authorizedData.data);
         if (authorizedData.data) {
           setAppState({
             loading: false,
-            authorized: true,
-            data: authorizedData.data,
+            data: authorizedData.data.user,
           });
         } else {
-          setAppState({ loading: false, authorized: false, data: null });
+          setAppState({
+            loading: false,
+            data: null,
+          });
         }
       })
       .catch((err) => {
         console.log(err);
-        setAppState({ loading: false, authorized: false, data: null });
+        setAppState({
+          loading: false,
+          data: null,
+        });
       });
-  }, [appState.token]);
+  }, []);
 
   return (
     <>
-      <DataLoading
-        isLoading={appState.loading}
-        data={appState.data}
-        setAppState={setAppState}
-      />
+      <DataLoading isLoading={appState.loading} data={appState.data} />
     </>
   );
 };

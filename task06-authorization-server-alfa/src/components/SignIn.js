@@ -4,9 +4,12 @@ import * as Yup from "yup";
 import { Grid, TextField } from "@mui/material";
 import axios from "axios";
 import { BASE_URL } from "../constants";
+import { useNavigate } from "react-router";
 
-const SignIn = (props) => {
+const SignIn = () => {
   const initialValues = { email: "", password: "" };
+
+  const navigate = useNavigate();
 
   const onSubmit = (values) => {
     console.log(values);
@@ -15,7 +18,7 @@ const SignIn = (props) => {
       .then((response) => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
-        props.setAppState({ token: response.data.token });
+        navigate("/authorized");
       })
       .catch((error) => {
         console.log(error);
