@@ -3,7 +3,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Link, Route } from "react-router-dom";
 import { Home } from "./components/Home";
 import { FreeContent } from "./components/FreeContent";
-import { AuthorizedContentLoader } from "./components/AuthorizedContentLoader";
+import AuthorizedContentLoader from "./components/AuthorizedContentLoader";
+import SignIn from "./components/SignIn";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
       <Routes>
         <Route path="/" exact Component={Home} />
         <Route path="/free" Component={FreeContent} />
-        <Route path="authorized" Component={AuthorizedContentLoader} />
+        <Route path="/authorized" Component={AuthorizedContentLoader} />
+        <Route path="/signin" Component={SignIn} />
       </Routes>
     </BrowserRouter>
   );
