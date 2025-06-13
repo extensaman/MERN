@@ -2,13 +2,13 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { BASE_URL } from "../constants";
 import { OnLoadingHOC } from "./OnLoadingHOC";
-import AuthorizedContentVisualization from "./AuthorizedContentVisualization";
+import { AuthorizedContentVisualization } from "./AuthorizedContentVisualization";
 import React from "react";
 
 class AuthorizedContentLoader extends React.Component {
   constructor(props) {
     super(props);
-    localStorage.setItem("token", null);
+    //localStorage.setItem("token", null);
     const tokenFromLocalStorage = localStorage.getItem("token");
 
     this.state = {
@@ -16,7 +16,9 @@ class AuthorizedContentLoader extends React.Component {
       data: null,
     };
 
-    console.log("AuthorizedContentLoader CONSTRUCTOR");
+    console.log(
+      "AuthorizedContentLoader CONSTRUCTOR. token = " + tokenFromLocalStorage
+    );
 
     axios
       .post(BASE_URL, { token: tokenFromLocalStorage })
@@ -34,9 +36,9 @@ class AuthorizedContentLoader extends React.Component {
       });
   }
 
-  componentDidMount() {
-    console.log("componentDidMount()");
-  }
+  // componentDidMount() {
+  //   console.log("componentDidMount()");
+  // }
 
   render() {
     const DataLoading = OnLoadingHOC(AuthorizedContentVisualization);
