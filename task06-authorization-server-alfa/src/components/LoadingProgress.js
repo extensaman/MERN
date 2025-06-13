@@ -1,4 +1,4 @@
-import { CircularProgress, Grid } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useState } from "react";
 
 const LoadingProgress = () => {
@@ -9,17 +9,7 @@ const LoadingProgress = () => {
   }, 500);
 
   return (
-    <div>
-      {visibility && (
-        <Grid container spacing={2}>
-          <Grid size="grow" />
-          <Grid size={1}>
-            <CircularProgress />
-          </Grid>
-          <Grid size="grow" />
-        </Grid>
-      )}
-    </div>
+    <div className="loadingProgress">{visibility && <CircularProgress />}</div>
   );
 };
 

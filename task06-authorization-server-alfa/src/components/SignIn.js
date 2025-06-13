@@ -5,14 +5,19 @@ import { Grid, TextField } from "@mui/material";
 import axios from "axios";
 import { BASE_URL } from "../constants";
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import LoadingProgress from "./LoadingProgress";
 
 const SignIn = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const initialValues = { email: "", password: "" };
 
   const navigate = useNavigate();
 
   const onSubmit = (values) => {
     console.log(values);
+    setIsLoading(true);
     axios
       .post(BASE_URL + "/signin", values)
       .then((response) => {
@@ -21,6 +26,7 @@ const SignIn = () => {
         navigate("/authorized");
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log(error);
       });
   };
@@ -41,44 +47,47 @@ const SignIn = () => {
   });
 
   return (
-    <Grid container spacing={2}>
-      <Grid size="grow" />
-      <Grid size={2}>
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            sx={{ my: "10px" }}
-            size="small"
-            id="email"
-            name="email"
-            label="Введите адрес электронной почты"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors.email && formik.touched.email}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-          <TextField
-            fullWidth
-            sx={{ my: "10px" }}
-            size="small"
-            id="password"
-            name="password"
-            type="password"
-            label="Введите пароль"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors.password && formik.touched.password}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-          <Button type="submit" variant="outlined" fullWidth>
-            Войти
-          </Button>
-        </form>
+    <div>
+      <Grid container spacing={2}>
+        <Grid size="grow" />
+        <Grid size={2}>
+          <form onSubmit={formik.handleSubmit}>
+            <TextField
+              fullWidth
+              sx={{ my: "10px" }}
+              size="small"
+              id="email"
+              name="email"
+              label="Введите адрес электронной почты"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.email && formik.touched.email}
+              helperText={formik.touched.email && formik.errors.email}
+            />
+            <TextField
+              fullWidth
+              sx={{ my: "10px" }}
+              size="small"
+              id="password"
+              name="password"
+              type="password"
+              label="Введите пароль"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.password && formik.touched.password}
+              helperText={formik.touched.password && formik.errors.password}
+            />
+            <Button type="submit" variant="outlined" fullWidth>
+              Войти
+            </Button>
+          </form>
+        </Grid>
+        <Grid size="grow" />
       </Grid>
-      <Grid size="grow" />
-    </Grid>
+      {isLoading && <LoadingProgress />}
+    </div>
   );
 };
 

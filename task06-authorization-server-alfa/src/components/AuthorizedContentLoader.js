@@ -36,10 +36,6 @@ class AuthorizedContentLoader extends React.Component {
       });
   }
 
-  // componentDidMount() {
-  //   console.log("componentDidMount()");
-  // }
-
   render() {
     const DataLoading = OnLoadingHOC(AuthorizedContentVisualization);
     return (
