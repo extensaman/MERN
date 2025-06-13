@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { BASE_URL } from "../constants";
 import { OnLoadingHOC } from "./OnLoadingHOC";
 import { AuthorizedContentVisualization } from "./AuthorizedContentVisualization";
