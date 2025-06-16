@@ -24,6 +24,7 @@ const SignIn = () => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
         navigate(-1);
+        setIsLoading(false);
       })
       .catch((error) => {
         setIsLoading(false);
