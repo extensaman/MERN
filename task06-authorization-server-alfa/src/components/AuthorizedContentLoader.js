@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "../constants";
+import { BACK_URL } from "../constants";
 import { OnLoadingHOC } from "./OnLoadingHOC";
 import { AuthorizedContentVisualization } from "./AuthorizedContentVisualization";
 import React from "react";
@@ -20,7 +20,7 @@ class AuthorizedContentLoader extends React.Component {
     );
 
     axios
-      .post(BASE_URL, { token: tokenFromLocalStorage })
+      .post(BACK_URL, { token: tokenFromLocalStorage })
       .then((authorizedData) => {
         console.log(authorizedData.data);
         if (authorizedData.data) {

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import * as Yup from "yup";
 import { Grid, TextField } from "@mui/material";
 import axios from "axios";
-import { BASE_URL } from "../constants";
+import { BACK_SIGN_IN_URL } from "../constants";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import LoadingProgress from "./LoadingProgress";
@@ -19,11 +19,11 @@ const SignIn = () => {
     console.log(values);
     setIsLoading(true);
     axios
-      .post(BASE_URL + "/signin", values)
+      .post(BACK_SIGN_IN_URL, values)
       .then((response) => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
-        navigate("/authorized");
+        navigate(-1);
       })
       .catch((error) => {
         setIsLoading(false);
