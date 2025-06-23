@@ -56,7 +56,7 @@ const Auth = sequelize.define("auth", {
 });
 
 // sequelize
-//   .sync()
+//   .sync({ force: true })
 //   .then((result) => {
 //     console.log(result);
 //   })
