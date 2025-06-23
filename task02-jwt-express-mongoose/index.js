@@ -45,16 +45,19 @@ mongoose
             return;
           }
           if (payload) {
+            console.log("Payload = " + payload.user);
             response
               .status(200)
-              .send({ message: "ATHORIZED DATA", data: "DATA IS HERE" });
+              .send({
+                message: "ATHORIZED DATA",
+                user: payload.user,
+                _id: payload._id,
+              });
           }
-        })
+        });
       } else {
         console.log("No token");
-        response
-          .status(401)
-          .send({ message: "Unauthorized Access. No token" });
+        response.status(401).send({ message: "Unauthorized Access. No token" });
       }
     });
 
