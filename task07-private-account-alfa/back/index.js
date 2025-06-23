@@ -3,6 +3,9 @@ const bcrypt = require("bcryptjs");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+const nodeMailer = require("nodemailer");
+const Constants = require("./constants");
+
 const app = express();
 
 const secret = "secret";
@@ -15,6 +18,18 @@ const errorHandler = (err, _, res, __) => {
   }
   console.error(err);
 };
+
+const responseDBError = (response, error) => {
+  response.status(500).send({ message: "Database error", error: error });
+};
+
+const mailTransporter = nodeMailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "XXX",
+    pass: "XXX",
+  },
+});
 
 app.use(express.json());
 app.use(cors());
@@ -94,23 +109,52 @@ app.post("/signup", (request, response) => {
     })
       .then((auth) => {
         if (auth) {
-          // сгенерировать шестизначное число Math.floor(Math.random() * (max - min) + min); // Максимум не включается, минимум включается
-          // сохранить его в БД
-          // отправить на почту этот шестизначный номер
-          //
+          // генерируем случайное четырехзначное число (максимум не включается, минимум включается)
+          const code = Math.floor(
+            Math.random() * (Constants.CODE_MAX - Constants.CODE_MIN) +
+              Constants.CODE_MIN
+          );
+          // обновляем в БД поле "code" для соответствующего табельнго номера
+          Model.Auth.update(
+            { code: code },
+            { where: { tabelNumber: request.body.tabelNumber } }
+          )
+            .then(() => {
+              // Отправляем на почту сгенерированный код
+              mailTransporter
+                .sendMail({
+                  from: 'Личный кабинет сотрудника филиала "Минские тепловые сети" ',
+                  to: auth.email,
+                  subject: "Код активации учетной записи",
+                  html: `Код активации учетной записи: <strong>${code}</strong>`,
+                })
+                .then((result) => {
+                  console.log(result);
+                  response.status(200).send({
+                    message: "Activation code has sent",
+                    result: result,
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  response
+                    .status(500)
+                    .send({ message: "Error in mail transport", error: err });
+                });
+            })
+            .catch((err) => responseDBError(response, err));
         } else {
           response
             .status(401)
             .send({ message: "Unauthorized Access. Wrong tabel number" });
         }
       })
-      .catch((err) =>
-        response.status(500).send({ message: "Database error", error: err })
-      );
+      .catch((err) => responseDBError(response, err));
   } else {
     response.sendStatus(400);
   }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server started at port ${PORT}`));
+app.listen(Constants.PORT, () =>
+  console.log(`Server started at port ${Constants.PORT}`)
+);
