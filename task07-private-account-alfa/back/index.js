@@ -68,13 +68,18 @@ app.post("/signin", (request, response) => {
   if (request.body && request.body.tabelNumber && request.body.password) {
     Model.Auth.findOne({ where: { tabelNumber: request.body.tabelNumber } })
       .then((auth) => {
-        if (auth) {
+        if (
+          auth &&
+          auth.dataValues &&
+          auth.dataValues.tabelNumber &&
+          auth.dataValues.id
+        ) {
           bcrypt
-            .compare(request.body.password, auth.password)
+            .compare(request.body.password, auth.dataValues.password)
             .then((result) => {
               if (result) {
                 const token = jwt.sign(
-                  { user: auth.tabelNumber, id: auth.id },
+                  { user: auth.dataValues.tabelNumber, id: auth.dataValues.id },
                   secret,
                   { expiresIn: "1h" }
                 );
@@ -93,10 +98,7 @@ app.post("/signin", (request, response) => {
             .send({ message: "Unauthorized Access. Wrong tabel number" });
         }
       })
-      .catch((err) => {
-        response.status(500).send({ error: err });
-        console.error(err);
-      });
+      .catch((err) => responseDBError(response, err));
   } else {
     response.sendStatus(400);
   }
@@ -108,7 +110,11 @@ app.post("/signup", (request, response) => {
       where: { tabelNumber: request.body.tabelNumber },
     })
       .then((auth) => {
-        if (auth) {
+        if (auth.dataValues) {
+          console.log(
+            "Найдены данные для аутентификации со следующей почтой: " +
+              Object.keys(auth.dataValues.email)
+          );
           // генерируем случайное четырехзначное число (максимум не включается, минимум включается)
           const code = Math.floor(
             Math.random() * (Constants.CODE_MAX - Constants.CODE_MIN) +
@@ -120,27 +126,34 @@ app.post("/signup", (request, response) => {
             { where: { tabelNumber: request.body.tabelNumber } }
           )
             .then(() => {
-              // Отправляем на почту сгенерированный код
-              mailTransporter
-                .sendMail({
-                  from: 'Личный кабинет сотрудника филиала "Минские тепловые сети" ',
-                  to: auth.email,
-                  subject: "Код активации учетной записи",
-                  html: `Код активации учетной записи: <strong>${code}</strong>`,
-                })
-                .then((result) => {
-                  console.log(result);
-                  response.status(200).send({
-                    message: "Activation code has sent",
-                    result: result,
+              if (auth.dataValues.email) {
+                // Отправляем на почту сгенерированный код
+                mailTransporter
+                  .sendMail({
+                    from: 'Личный кабинет сотрудника филиала "Минские тепловые сети" ',
+                    to: auth.dataValues.email,
+                    subject: "Код активации учетной записи",
+                    html: `Код активации учетной записи: <strong>${code}</strong>`,
+                  })
+                  .then((result) => {
+                    console.log(result);
+                    response.status(200).send({
+                      message: "Activation code has sent",
+                      result: result,
+                    });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    response
+                      .status(500)
+                      .send({ message: "Error in mail transport", error: err });
                   });
-                })
-                .catch((err) => {
-                  console.log(err);
-                  response
-                    .status(500)
-                    .send({ message: "Error in mail transport", error: err });
-                });
+              } else {
+                // если в БД поле с почтой пустое, то отвечаем, что у данного пользователя нет почты
+                response
+                  .status(400)
+                  .send({ message: "This user hasn't email" });
+              }
             })
             .catch((err) => responseDBError(response, err));
         } else {

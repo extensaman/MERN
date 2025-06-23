@@ -55,19 +55,19 @@ const Auth = sequelize.define("auth", {
   },
 });
 
-sequelize
-  .sync()
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => console.log(err));
+// sequelize
+//   .sync()
+//   .then((result) => {
+//     console.log(result);
+//   })
+//   .catch((err) => console.log(err));
 
-Auth.create({
-  tabelNumber: 11074,
-  email: "verus.wedding@gmail.com",
-});
+// Auth.create({
+//   tabelNumber: 11074,
+//   email: "verus.wedding@gmail.com",
+// });
 
 module.exports = {
   User: User,
-  Password: Auth,
+  Auth: Auth,
 };
