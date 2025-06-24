@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const nodeMailer = require("nodemailer");
 const Constants = require("./constants");
-const Helper = require('./misc/helper');
+const Helper = require("./misc/helper");
 
 const app = express();
 
@@ -27,8 +27,8 @@ const responseDBError = (response, error) => {
 const mailTransporter = nodeMailer.createTransport({
   service: "gmail",
   auth: {
-    user: 'XXX',
-    pass: 'XXX'
+    user: "XXX",
+    pass: "XXX",
   },
 });
 
@@ -114,12 +114,12 @@ app.post("/signup", (request, response) => {
         if (auth.dataValues) {
           console.log(
             "Найдены данные для аутентификации со следующей почтой: " +
-            Object.keys(auth.dataValues.email)
+              auth.dataValues.email
           );
           // генерируем случайное четырехзначное число (максимум не включается, минимум включается)
           const code = Math.floor(
             Math.random() * (Constants.CODE_MAX - Constants.CODE_MIN) +
-            Constants.CODE_MIN
+              Constants.CODE_MIN
           );
           // обновляем в БД поле "code" для соответствующего табельнго номера
           Model.Auth.update(
@@ -134,7 +134,7 @@ app.post("/signup", (request, response) => {
                     from: 'Личный кабинет сотрудника филиала "Минские тепловые сети" ',
                     to: auth.dataValues.email,
                     subject: "Код активации учетной записи",
-                    html: `Код активации учетной записи: <strong>${code}</strong>`,
+                    html: `<div style="font-size: 12px;">Код активации учетной записи: <strong style="font-size: 14px;">${code}</strong></div>`,
                   })
                   .then((result) => {
                     console.log(result);

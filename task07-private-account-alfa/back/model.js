@@ -63,8 +63,8 @@ const Auth = sequelize.define("auth", {
 //   .catch((err) => console.log(err));
 
 // Auth.create({
-//   tabelNumber: 11074,
-//   email: "verus.wedding@gmail.com",
+//   tabelNumber: 11075,
+//   email: "yusikov_av@mts.minskenergo.by",
 // });
 
 module.exports = {
