@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "axios";
+import { OnLoadingHOC } from "./OnLoadingHOC";
+import { PrivateAccountVisualization } from "./PrivateAccountVisualization";
 import { BACK_URL, TOKEN_KEY_NAME_IN_LOCAL_STORAGE } from "../constants";
 
 class PrivateAccountLoader extends React.Component {
@@ -16,9 +18,9 @@ class PrivateAccountLoader extends React.Component {
 
     axios
       .post(BACK_URL, { token: tokenFromLocalStorage })
-      .then((response) => {
-        console.log(response);
-        this.setState({ isLoading: false, data: "FROM BACK" });
+      .then((authorizedData) => {
+        console.log(authorizedData);
+        this.setState({ isLoading: false, data: authorizedData.data.email });
       })
       .catch((err) => {
         if (err.response) {
@@ -35,10 +37,11 @@ class PrivateAccountLoader extends React.Component {
   }
 
   render() {
+    const DataLoading = OnLoadingHOC(PrivateAccountVisualization);
     return (
-      <div>
-        <h1>PrivateAccountLoader component</h1>
-      </div>
+      <>
+        <DataLoading isLoading={this.state.loading} data={this.state.data} />
+      </>
     );
   }
 }

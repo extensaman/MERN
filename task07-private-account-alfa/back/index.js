@@ -105,7 +105,7 @@ app.post("/signin", (request, response) => {
   }
 });
 
-app.post("/signup", (request, response) => {
+app.post("/signup/generate", (request, response) => {
   if (request.body && request.body.tabelNumber) {
     Model.Auth.findOne({
       where: { tabelNumber: request.body.tabelNumber },
