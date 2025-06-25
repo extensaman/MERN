@@ -6,6 +6,7 @@ import axios from "axios";
 import { BACK_SIGN_IN_URL } from "../constants";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import LoadingProgress from "./LoadingProgress";
 
 const SignIn = () => {
@@ -80,10 +81,11 @@ const SignIn = () => {
               error={formik.errors.password && formik.touched.password}
               helperText={formik.touched.password && formik.errors.password}
             />
-            <Button type="submit" variant="outlined" fullWidth>
+            {isLoading ? <LoadingProgress /> : <Button type="submit" variant="outlined" fullWidth>
               Войти
-            </Button>
+            </Button>}
           </form>
+          <Link to='/signup/generate'>Забыл пароль</Link>
         </Grid>
         <Grid size="grow" />
       </Grid>

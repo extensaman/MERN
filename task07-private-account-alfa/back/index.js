@@ -27,9 +27,9 @@ const responseDBError = (response, error) => {
 const mailTransporter = nodeMailer.createTransport({
   service: "gmail",
   auth: {
-    user: "XXX",
-    pass: "XXX",
-  },
+    user: 'XXX',
+    pass: 'XXX'
+  }
 });
 
 app.use(express.json());
@@ -66,13 +66,13 @@ app.post("/", (request, response) => {
 });
 
 app.post("/signin", (request, response) => {
-  if (request.body && request.body.tabelNumber && request.body.password) {
-    Model.Auth.findOne({ where: { tabelNumber: request.body.tabelNumber } })
+  if (request.body && request.body.email && request.body.password) {
+    Model.Auth.findOne({ where: { email: request.body.email } })
       .then((auth) => {
         if (
           auth &&
           auth.dataValues &&
-          auth.dataValues.tabelNumber &&
+          auth.dataValues.email &&
           auth.dataValues.id
         ) {
           bcrypt
@@ -80,7 +80,7 @@ app.post("/signin", (request, response) => {
             .then((result) => {
               if (result) {
                 const token = jwt.sign(
-                  { user: auth.dataValues.tabelNumber, id: auth.dataValues.id },
+                  { user: auth.dataValues.email, id: auth.dataValues.id },
                   secret,
                   { expiresIn: "1h" }
                 );
@@ -106,25 +106,25 @@ app.post("/signin", (request, response) => {
 });
 
 app.post("/signup/generate", (request, response) => {
-  if (request.body && request.body.tabelNumber) {
+  if (request.body && request.body.email) {
     Model.Auth.findOne({
-      where: { tabelNumber: request.body.tabelNumber },
+      where: { email: request.body.email },
     })
       .then((auth) => {
         if (auth.dataValues) {
           console.log(
             "Найдены данные для аутентификации со следующей почтой: " +
-              auth.dataValues.email
+            auth.dataValues.email
           );
           // генерируем случайное четырехзначное число (максимум не включается, минимум включается)
           const code = Math.floor(
             Math.random() * (Constants.CODE_MAX - Constants.CODE_MIN) +
-              Constants.CODE_MIN
+            Constants.CODE_MIN
           );
           // обновляем в БД поле "code" для соответствующего табельнго номера
           Model.Auth.update(
             { code: code },
-            { where: { tabelNumber: request.body.tabelNumber } }
+            { where: { email: request.body.email } }
           )
             .then(() => {
               if (auth.dataValues.email) {
@@ -134,7 +134,7 @@ app.post("/signup/generate", (request, response) => {
                     from: 'Личный кабинет сотрудника филиала "Минские тепловые сети" ',
                     to: auth.dataValues.email,
                     subject: "Код активации учетной записи",
-                    html: `<div style="font-size: 12px;">Код активации учетной записи: <strong style="font-size: 14px;">${code}</strong></div>`,
+                    html: `<div style="font-size: 14px;">Код активации учетной записи: <strong style="font-size: 18px;">${code}</strong></div>`,
                   })
                   .then((result) => {
                     console.log(result);
