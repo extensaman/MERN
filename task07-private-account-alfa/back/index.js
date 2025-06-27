@@ -27,9 +27,9 @@ const responseDBError = (response, error) => {
 const mailTransporter = nodeMailer.createTransport({
   service: "gmail",
   auth: {
-    user: 'XXX',
-    pass: 'XXX'
-  }
+    user: "XXX",
+    pass: "XXX",
+  },
 });
 
 app.use(express.json());
@@ -114,12 +114,12 @@ app.post("/signup/generate", (request, response) => {
         if (auth.dataValues) {
           console.log(
             "Найдены данные для аутентификации со следующей почтой: " +
-            auth.dataValues.email
+              auth.dataValues.email
           );
           // генерируем случайное четырехзначное число (максимум не включается, минимум включается)
           const code = Math.floor(
             Math.random() * (Constants.CODE_MAX - Constants.CODE_MIN) +
-            Constants.CODE_MIN
+              Constants.CODE_MIN
           );
           // обновляем в БД поле "code" для соответствующего табельнго номера
           Model.Auth.update(
@@ -146,7 +146,7 @@ app.post("/signup/generate", (request, response) => {
                   .catch((err) => {
                     console.log(err);
                     response
-                      .status(500)
+                      .status(200) //////////////////////////////////////////////////////// 500
                       .send({ message: "Error in mail transport", error: err });
                   });
               } else {
@@ -160,11 +160,74 @@ app.post("/signup/generate", (request, response) => {
         } else {
           response
             .status(401)
-            .send({ message: "Unauthorized Access. Wrong tabel number" });
+            .send({ message: "Unauthorized Access. Wrong email" });
         }
       })
       .catch((err) => responseDBError(response, err));
   } else {
+    response.sendStatus(400);
+  }
+});
+
+app.post("/signup/activate", (request, response) => {
+  if (
+    request.body &&
+    request.body.email &&
+    request.body.password &&
+    request.body.code
+  ) {
+    console.log("In /signup/activate: " + request.body.email);
+    // Находим пользователя по email-у
+    Model.Auth.findOne({ where: { email: request.body.email } })
+      .then((auth) => {
+        console.log(auth.dataValues);
+        if (auth.dataValues) {
+          console.log(auth.dataValues.code + " " + request.body.code);
+          // Проверяем совпадает ли присланный код с кодом в БД
+          if (auth.dataValues.code == request.body.code) {
+            // Хэшируем пароль
+            console.log("Хэшируем пароль");
+            bcrypt
+              .hash(request.body.password, 10)
+              .then((hash) => {
+                // Обновляем пароль пользователя в БД
+                console.log("Обновляем пароль пользователя в БД");
+                Model.Auth.update(
+                  { passwort: hash },
+                  { where: { email: request.body.email } }
+                )
+                  .then(() => {
+                    // И редиректимся на /SINGIN
+                    console.log("редирект ");
+                    response.redirect(307, "/signin");
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    response
+                      .sendStatus(500)
+                      .send({ message: "DB error" }, { error: err });
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+                response
+                  .sendStatus(500)
+                  .send({ message: "Hashing error" }, { error: err });
+              });
+          }
+        } else {
+          console.log("401");
+          response
+            .status(401)
+            .send({ message: "Unauthorized Access. Wrong email" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        response.sendStatus(500).send({ message: "DB error" }, { error: err });
+      });
+  } else {
+    console.log("400");
     response.sendStatus(400);
   }
 });

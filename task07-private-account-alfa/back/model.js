@@ -55,12 +55,15 @@ const Auth = sequelize.define("auth", {
   },
 });
 
-// sequelize
-//   .sync({ force: true })
-//   .then((result) => {
-//     console.log(result);
-//   })
-//   .catch((err) => console.log(err));
+sequelize
+  .sync()
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((err) => {
+    console.log(err);
+    throw "No database connection";
+  });
 
 // Auth.create({
 //   tabelNumber: 11075,
