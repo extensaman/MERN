@@ -40,7 +40,7 @@ class PrivateAccountLoader extends React.Component {
     const DataLoading = OnLoadingHOC(PrivateAccountVisualization);
     return (
       <>
-        <DataLoading isLoading={this.state.loading} data={this.state.data} />
+        <DataLoading isLoading={this.state.isLoading} data={this.state.data} />
       </>
     );
   }

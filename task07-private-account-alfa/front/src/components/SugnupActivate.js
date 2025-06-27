@@ -3,15 +3,19 @@ import Button from "@mui/material/Button";
 import * as Yup from "yup";
 import { Grid, TextField } from "@mui/material";
 import axios from "axios";
-import { BACK_SIGN_UP_ACTIVATE_URL } from "../constants";
+import {
+  BACK_SIGN_UP_ACTIVATE_URL,
+  TOKEN_KEY_NAME_IN_LOCAL_STORAGE,
+} from "../constants";
 import { useState } from "react";
 import LoadingProgress from "./LoadingProgress";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const SignupActivate = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const email = useLocation().state.email;
+  const navigate = useNavigate();
 
   const initialValues = { code: "", password: "", confirmPassword: "" };
 
@@ -25,7 +29,12 @@ const SignupActivate = () => {
       })
       .then((response) => {
         console.log(response.data);
+        localStorage.setItem(
+          TOKEN_KEY_NAME_IN_LOCAL_STORAGE,
+          response.data.token
+        );
         setIsLoading(false);
+        navigate("/");
       })
       .catch((error) => {
         setIsLoading(false);

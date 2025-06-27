@@ -54,7 +54,7 @@ app.post("/", (request, response) => {
         console.log("Payload = " + payload.user);
         response.status(200).send({
           message: "ATHORIZED DATA",
-          user: payload.user,
+          email: payload.user,
           _id: payload._id,
         });
       }
@@ -92,6 +92,12 @@ app.post("/signin", (request, response) => {
                   .status(401)
                   .send({ message: "Unauthorized Access. Wrong password" });
               }
+            })
+            .catch((err) => {
+              console.log(err);
+              response
+                .sendStatus(500)
+                .send({ message: "Hashing error" }, { error: err });
             });
         } else {
           response
@@ -176,24 +182,19 @@ app.post("/signup/activate", (request, response) => {
     request.body.password &&
     request.body.code
   ) {
-    console.log("In /signup/activate: " + request.body.email);
     // Находим пользователя по email-у
     Model.Auth.findOne({ where: { email: request.body.email } })
       .then((auth) => {
-        console.log(auth.dataValues);
         if (auth.dataValues) {
-          console.log(auth.dataValues.code + " " + request.body.code);
           // Проверяем совпадает ли присланный код с кодом в БД
           if (auth.dataValues.code == request.body.code) {
             // Хэшируем пароль
-            console.log("Хэшируем пароль");
             bcrypt
               .hash(request.body.password, 10)
               .then((hash) => {
                 // Обновляем пароль пользователя в БД
-                console.log("Обновляем пароль пользователя в БД");
                 Model.Auth.update(
-                  { passwort: hash },
+                  { password: hash },
                   { where: { email: request.body.email } }
                 )
                   .then(() => {
@@ -216,7 +217,7 @@ app.post("/signup/activate", (request, response) => {
               });
           }
         } else {
-          console.log("401");
+          console.log("Unauthorized Access. Wrong email, send status 401");
           response
             .status(401)
             .send({ message: "Unauthorized Access. Wrong email" });
@@ -227,7 +228,7 @@ app.post("/signup/activate", (request, response) => {
         response.sendStatus(500).send({ message: "DB error" }, { error: err });
       });
   } else {
-    console.log("400");
+    console.log("Error, send status 400");
     response.sendStatus(400);
   }
 });
