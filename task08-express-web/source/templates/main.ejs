@@ -1,16 +1,20 @@
-<!doctype html>
-    <html>
-        <head>
-            <meta charset="UTF-8">
-            <title><%= title%> :: Список запланированных дел</title>
-        </head>
-        <body>
+<%- include ('./includes/header') %>
+    <form method="get" style="text-align: right;">
+        <input name="search" value="<%= req.query.search %>" style="display: inline; width: 200px;">
+        <input type="submit" value="Найти" style="display: inline;">
+    </form>
             <h1>Запланированные дела</h1>
             <% for (let el of todos) { %>
-                <h2><a href="/<%= el._id %>/"><%= el.title %></a></h2>
-                <p><%= el.desc %></p>
-                <p><%= new Date(el.createdAt).toLocaleString() %></p>
-                <p>&nbsp</p>
+                <article class="card"> <!-- ............................ 1 -->
+                    <header> <!-- ...................................... 2 -->
+                        <h2><a href="/<%= el._id %>/"><%= el.title %></a></h2>
+                    </header>
+                    <footer> <!-- ...................................... 3 -->
+                        <% if (el.desc) { %>
+                        <p><%= el.desc %></p>
+                        <% } %>
+                        <p><%= (new Date(el.createdAt)).toLocaleString() %></p>
+                    </footer>
+                </article>
             <% } %>
-        </body>
-  </html>
+<%- include ('./includes/footer') %>

@@ -1,7 +1,19 @@
 import { getList, getItem } from "../models/todos.js";
 
-export const mainPage = (_, res) => {
-  res.render("main", { todos: getList(), title: "Главная" });
+export const mainPage = (req, res) => {
+  let list = getList(); // ....................................... 1
+  if (req.query.search) {
+    // ..................................... 2
+    const q = req.query.search.toLowerCase(); // ............... 3
+    list = list.filter((el) => {
+      if (el.title.toLowerCase().includes(q))
+        // ............. 4
+        return true;
+      else if (el.desc) return el.desc.toLowerCase().includes(q); // ... 5
+      else return false;
+    });
+  }
+  res.render("main", { req: req, todos: list, title: "Главная" });
 };
 
 export const detailPage = (req, res) => {
@@ -10,7 +22,7 @@ export const detailPage = (req, res) => {
     errorPage(req, res);
     return;
   }
-  res.render("detail", { title: "Расширенная информация", todo: todo });
+  res.render("detail", { title: "Детали", todo: todo });
 };
 
 const errorPage = (_, res) => {
