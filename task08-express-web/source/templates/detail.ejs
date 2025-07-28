@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title><%= title || 'Детали'%></title>
+    </head>
+    <body>
+        <h1><%=todo.title%></h1>
+        <p><%=todo.desc%></p>
+        <p>Создано: <%=new Date(todo.createdAt).toLocaleString()%></p>
+    </body>
+</html>

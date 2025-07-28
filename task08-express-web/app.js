@@ -7,6 +7,8 @@ config();
 const port = process.env.PORT || 8000;
 
 const app = express();
+app.set("view engine", "ejs");
+app.set("views", "./source/templates");
 
 app.use("/", router);
 const server = app.listen(port, () =>
