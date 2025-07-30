@@ -1,0 +1,11 @@
+<%- include ('./includes/header') %>
+    <form action="/add" method="post">
+        <label>Заголовок</label>
+        <input type="text" name="title"/>
+        <label>Описание</label>
+        <textarea name="desc"></textarea>
+        <div style="text-align: right;">
+            <button type="submit">Добавить</button>
+        </div>
+    </form>
+<%- include ('./includes/footer') %>

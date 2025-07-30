@@ -5,15 +5,27 @@
     </form>
             <h1>Запланированные дела</h1>
             <% for (let el of todos) { %>
-                <article class="card"> <!-- ............................ 1 -->
-                    <header> <!-- ...................................... 2 -->
-                        <h2><a href="/<%= el._id %>/"><%= el.title %></a></h2>
+                <article class="card"> 
+                    <header> 
+                        <% if(el.done) { %>
+                            <h2><del><a href="/<%= el._id %>/"><%= el.title %></a></del></h2>
+                        <% } else { %>
+                            <h2><a href="/<%= el._id %>/"><%= el.title %></a></h2>
+                        <% } %>
                     </header>
-                    <footer> <!-- ...................................... 3 -->
+                    <footer> 
                         <% if (el.desc) { %>
                         <p><%= el.desc %></p>
                         <% } %>
                         <p><%= (new Date(el.createdAt)).toLocaleString() %></p>
+                        <% if(!el.done) { %>
+                            <form action="/<%= el._id %>/?_method=PUT" method="post" style="display: inline;">
+                                <input type="submit" class="success" value="Сделано!">
+                            </form>
+                        <% } %>
+                            <form action="/<%= el._id %>/?_method=DELETE" method="post" style="display: inline;">
+                                <input type="submit" class="warning" value="Удалить">
+                            </form>
                     </footer>
                 </article>
             <% } %>

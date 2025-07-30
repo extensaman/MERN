@@ -1,4 +1,10 @@
-import { getList, getItem } from "../models/todos.js";
+import {
+  getList,
+  getItem,
+  addData,
+  setDoneItem,
+  deleteItem,
+} from "../models/todos.js";
 
 export const mainPage = (req, res) => {
   let list = getList(); // ....................................... 1
@@ -27,4 +33,34 @@ export const detailPage = (req, res) => {
 
 const errorPage = (_, res) => {
   res.status(404).render("error", { title: "Error" });
+};
+
+export const addItem = (_, res) => {
+  res.render("add", { title: "Добавить" });
+};
+
+export const add = (req, res) => {
+  const todo = {
+    title: req.body.title,
+    desc: req.body.desc || "",
+    createdAt: new Date().toString(),
+  };
+  addData(todo);
+  res.redirect("/");
+};
+
+export const setDone = (req, res) => {
+  if (setDoneItem(req.params.id)) {
+    res.redirect("/");
+  } else {
+    errorPage(req, res);
+  }
+};
+
+export const remove = (req, res) => {
+  if (deleteItem(req.params.id)) {
+    res.redirect("/");
+  } else {
+    errorPage(req, res);
+  }
 };
