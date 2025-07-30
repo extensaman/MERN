@@ -13,5 +13,9 @@ console.log(
   "dirname(dirname(fileURLToPath(import.meta.url))) = " +
     dirname(dirname(fileURLToPath(import.meta.url)))
 );
-const currentDir = dirname(dirname(fileURLToPath(import.meta.url)));
-export { currentDir };
+export const currentDir = dirname(dirname(fileURLToPath(import.meta.url)));
+
+export const logger = (req, res, next) => {
+  next();
+  console.log(`${req.url} ${res.statusCode} ${res.statusMessage}`);
+};
