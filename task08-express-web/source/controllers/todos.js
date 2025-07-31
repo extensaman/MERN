@@ -19,7 +19,7 @@ export const mainPage = (req, res) => {
       else return false;
     });
   }
-  res.render("main", { req: req, todos: list, title: "Главная" });
+  res.render("main", { todos: list, title: "Главная" });
 };
 
 export const detailPage = (req, res) => {
