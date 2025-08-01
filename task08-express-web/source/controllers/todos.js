@@ -1,3 +1,5 @@
+import createError from "http-errors";
+
 import {
   getList,
   getItem,
@@ -25,14 +27,9 @@ export const mainPage = (req, res) => {
 export const detailPage = (req, res) => {
   const todo = getItem(req.params.id);
   if (!todo) {
-    errorPage(req, res);
-    return;
+    throw createError(404, "Запрошенное дело не существует");
   }
   res.render("detail", { title: "Детали", todo: todo });
-};
-
-const errorPage = (_, res) => {
-  res.status(404).render("error", { title: "Error" });
 };
 
 export const addItem = (_, res) => {
@@ -53,7 +50,7 @@ export const setDone = (req, res) => {
   if (setDoneItem(req.params.id)) {
     res.redirect("/");
   } else {
-    errorPage(req, res);
+    throw createError(404, "Запрошенное дело не существует");
   }
 };
 
@@ -61,6 +58,6 @@ export const remove = (req, res) => {
   if (deleteItem(req.params.id)) {
     res.redirect("/");
   } else {
-    errorPage(req, res);
+    throw createError(404, "Запрошенное дело не существует");
   }
 };
