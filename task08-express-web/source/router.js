@@ -25,6 +25,6 @@ router.get("/", mainPage);
 router.post("/add", add);
 router.put("/:id", setDone);
 router.delete("/:id", remove);
-router.use(mainErrorHandler, error500Handler); // ДОЛЖЕН БЫТЬ ПОСЛЕДНИМ, а иначе срабатывает встроенный в express обработчик
+router.use(mainErrorHandler, error500Handler); // ДОЛЖЕН БЫТЬ ПОСЛЕДНИМ, а иначе срабатывает встроенный в express обработчик ошибок
 
 export default router;
