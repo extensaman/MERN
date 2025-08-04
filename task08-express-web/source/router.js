@@ -2,7 +2,8 @@ import { Router } from "express";
 import { urlencoded } from "express";
 import methodOverride from "method-override";
 import { logger } from "./utility.js";
-import { putRequestToContext } from "./middleware.js";
+import { putRequestToContext, handleErrors } from "./middleware.js";
+import { todoV } from "./validators.js";
 import {
   detailPage,
   mainPage,
@@ -22,7 +23,7 @@ router.use(putRequestToContext);
 router.get("/add", addItem);
 router.get("/:id", detailPage);
 router.get("/", mainPage);
-router.post("/add", add);
+router.post("/add", todoV, handleErrors, add);
 router.put("/:id", setDone);
 router.delete("/:id", remove);
 router.use(mainErrorHandler, error500Handler); // ДОЛЖЕН БЫТЬ ПОСЛЕДНИМ, а иначе срабатывает встроенный в express обработчик ошибок
