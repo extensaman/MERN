@@ -1,9 +1,14 @@
 <%- include ('./includes/header') %>
     <form action="/add" method="post">
         <label>Заголовок</label>
-        <input type="text" name="title"/>
+        <input name="title" value="<%= body.title || '' %>">
+            <% if (errors.title) { %>
+                <div><span class="label error">
+                    <%= errors.title.msg %>
+                </span></div>
+            <% } %>
         <label>Описание</label>
-        <textarea name="desc"></textarea>
+        <textarea name="desc"><%= body.desc || '' %></textarea>
         <div style="text-align: right;">
             <button type="submit">Добавить</button>
         </div>
