@@ -10,6 +10,20 @@ import {
 
 export const mainPage = (req, res) => {
   let list = getList(); // ....................................... 1
+  if (req.cookies.doneAtLast === "1") {
+    // ....................... 1
+    list = [...list]; // ....................................... 2
+    list.sort((el1, el2) => {
+      // ............................... 3
+      const date1 = new Date(el1.createdAt);
+      const date2 = new Date(el2.createdAt);
+      const done1 = el1.done || false;
+      const done2 = el2.done || false;
+      const doneDiff = done1 - done2;
+      if (doneDiff != 0) return doneDiff;
+      else return date1 - date2;
+    });
+  }
   if (req.query.search) {
     // ..................................... 2
     const q = req.query.search.toLowerCase(); // ............... 3
@@ -60,4 +74,9 @@ export const remove = (req, res) => {
   } else {
     throw createError(404, "Запрошенное дело не существует");
   }
+};
+
+export const setOrder = (req, res) => {
+  res.cookie("doneAtLast", req.body.done_at_last);
+  res.redirect("/");
 };
