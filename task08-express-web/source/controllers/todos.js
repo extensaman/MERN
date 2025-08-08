@@ -1,4 +1,6 @@
 import createError from "http-errors";
+import { join } from "node:path";
+import { rm } from "node:fs/promises";
 
 import {
   getList,
@@ -7,6 +9,8 @@ import {
   setDoneItem,
   deleteItem,
 } from "../models/todos.js";
+import addendumUploader from "../uploaders.js";
+import { currentDir } from "../utility.js";
 
 export const mainPage = (req, res) => {
   let list = getList(); // ....................................... 1
@@ -56,6 +60,7 @@ export const add = (req, res) => {
     desc: req.body.desc || "",
     createdAt: new Date().toString(),
   };
+  if (req.file) todo.addendum = req.file.filename;
   addData(todo);
   res.redirect("/");
 };
@@ -68,15 +73,43 @@ export const setDone = (req, res) => {
   }
 };
 
-export const remove = (req, res) => {
-  if (deleteItem(req.params.id)) {
+export const remove = async (req, res, next) => {
+  try {
+    const item = getItem(req.params.id);
+    if (!item) {
+      throw (404, "Запрошенное дело не существует");
+    }
+    if (item.addendum) {
+      // Удаляем ранее заруженный файл
+      await rm(join(currentDir, "storage", "uploaded", item.addendum));
+    }
+    deleteItem(item._id);
     res.redirect("/");
-  } else {
-    throw createError(404, "Запрошенное дело не существует");
+  } catch (err) {
+    next(err);
   }
 };
 
 export const setOrder = (req, res) => {
   res.cookie("doneAtLast", req.body.done_at_last);
   res.redirect("/");
+};
+
+export const addendumWrapper = (req, res, next) => {
+  addendumUploader(req, res, (err) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        req.errorObj = {
+          addendum: {
+            msg: "Допускаются файлы не более 100 кБ",
+          },
+        };
+        next();
+      } else {
+        next(err);
+      }
+    } else {
+      next();
+    }
+  });
 };

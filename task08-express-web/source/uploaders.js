@@ -3,7 +3,7 @@ import multer, { diskStorage } from "multer";
 
 const uploadHandler = multer({
   storage: diskStorage({
-    destination: "../storage/uploaded",
+    destination: "./storage/uploaded",
     filename: (_, file, cb) => {
       const name = `${Date.now()}.${(Math.random() * 10000) | 1}`; // | 1 - это округление
       const ext = extname(file.originalname);

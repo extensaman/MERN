@@ -2,8 +2,13 @@ import { matchedData, validationResult } from "express-validator";
 
 export const handleErrors = async (req, res, next) => {
   const result = validationResult(req);
-  if (!result.isEmpty()) {
-    await req.flash("errors", result.mapped());
+  if (!result.isEmpty() || req.errorObj) {
+    // Объединяем в один объект ошибки, полученные от валидатора и от обработчика ошибок загрузки файлов
+    const оbjForUniteErrors = {
+      ...result.mapped(),
+      ...req.errorObj,
+    };
+    await req.flash("errors", оbjForUniteErrors);
     await req.flash("body", req.body);
     const backURL = req.header("Referer") || "/";
     res.redirect(backURL);

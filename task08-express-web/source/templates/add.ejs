@@ -1,7 +1,12 @@
 <%- include ('./includes/header') %>
-    <form action="/add" method="post">
+    <form action="/add" method="post" enctype="multipart/form-data">
         <label>Заголовок</label>
         <input name="title" value="<%= body.title || '' %>">
+        <label>Иллюстрация</label>
+        <input type="file" name="addendum" accept="image/*">
+            <% if (errors.addendum) { %>
+                <div><span class="label error"><%= errors.addendum.msg %></span></div>
+            <% } %>
             <% if (errors.title) { %>
                 <div><span class="label error">
                     <%= errors.title.msg %>
