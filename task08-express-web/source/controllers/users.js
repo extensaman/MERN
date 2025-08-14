@@ -20,5 +20,43 @@ export async function register(req, res) {
     salt: salt,
   };
   addUser(user);
-  res.redirect("/");
+  res.redirect("/login");
+}
+
+export function loginPage(req, res) {
+  res.render("login", { title: "Вход" });
+}
+
+export function login(req, res, next) {
+  req.session.regenerate((err) => {
+    // ........................... 1
+    if (err) next(err);
+    else {
+      req.session.user = {
+        // ................................ 2
+        id: req.__user._id,
+        name: req.__user.username,
+      };
+      req.session.save((err) => {
+        // ......................... 3
+        if (err) next(err);
+        else res.redirect("/"); // .......................... 4
+      });
+    }
+  });
+}
+
+export function logout(req, res, next) {
+  delete req.session.user; // .................................... 5
+  req.session.save((err) => {
+    // ................................. 6
+    if (err) next(err);
+    else {
+      req.session.regenerate((err) => {
+        // ................... 7
+        if (err) next(err);
+        else res.redirect("/login"); // ..................... 8
+      });
+    }
+  });
 }

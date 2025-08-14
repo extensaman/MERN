@@ -48,3 +48,8 @@ export const isGuest = (req, res, next) => {
     next();
   }
 };
+
+export function isLoggedIn(req, res, next) {
+  if (req.user) next();
+  else res.redirect("/login");
+}

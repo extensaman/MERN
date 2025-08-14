@@ -13,7 +13,7 @@ import addendumUploader from "../uploaders.js";
 import { currentDir } from "../utility.js";
 
 export const mainPage = (req, res) => {
-  let list = getList(); // ....................................... 1
+  let list = getList(req.user.id); // ....................................... 1
   if (req.cookies.doneAtLast === "1") {
     // ....................... 1
     list = [...list]; // ....................................... 2
@@ -43,7 +43,7 @@ export const mainPage = (req, res) => {
 };
 
 export const detailPage = (req, res) => {
-  const todo = getItem(req.params.id);
+  const todo = getItem(req.params.id, req.user.id);
   if (!todo) {
     throw createError(404, "Запрошенное дело не существует");
   }
@@ -58,6 +58,7 @@ export const add = (req, res) => {
   const todo = {
     title: req.body.title,
     desc: req.body.desc || "",
+    user: req.user.id,
     createdAt: new Date().toString(),
   };
   if (req.file) todo.addendum = req.file.filename;
@@ -66,7 +67,7 @@ export const add = (req, res) => {
 };
 
 export const setDone = (req, res) => {
-  if (setDoneItem(req.params.id)) {
+  if (setDoneItem(req.params.id, req.user.id)) {
     res.redirect("/");
   } else {
     throw createError(404, "Запрошенное дело не существует");
@@ -75,7 +76,7 @@ export const setDone = (req, res) => {
 
 export const remove = async (req, res, next) => {
   try {
-    const item = getItem(req.params.id);
+    const item = getItem(req.params.id, req.user.id);
     if (!item) {
       throw (404, "Запрошенное дело не существует");
     }

@@ -2,8 +2,12 @@ import { database, saveDatabase, getObjectId } from "./__loaddatabase.js";
 
 const todos = database.todos;
 
-export const getList = () => todos;
-export const getItem = (id) => todos.find((el) => el._id === id);
+export function getList(user) {
+  return todos.filter((el) => el.user === user);
+}
+
+export const getItem = (id, user) =>
+  todos.find((el) => el._id === id && el.user === user);
 
 export const addData = (todo) => {
   todo._id = getObjectId();
@@ -11,12 +15,12 @@ export const addData = (todo) => {
   saveDatabase();
 };
 
-export const getItemIndex = (id) => {
-  return todos.findIndex((el) => el._id === id);
+export const getItemIndex = (id, user) => {
+  return todos.findIndex((el) => el._id === id && el.user === user);
 };
 
-export const setDoneItem = (id) => {
-  const index = getItemIndex(id);
+export const setDoneItem = (id, user) => {
+  const index = getItemIndex(id, user);
   if (index > -1) {
     todos[index].done = true;
     saveDatabase();
@@ -26,8 +30,8 @@ export const setDoneItem = (id) => {
   }
 };
 
-export const deleteItem = (id) => {
-  const index = getItemIndex(id);
+export const deleteItem = (id, user) => {
+  const index = getItemIndex(id, user);
   if (index > -1) {
     todos.splice(index, 1);
     saveDatabase();

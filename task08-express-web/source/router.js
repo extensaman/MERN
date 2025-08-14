@@ -9,8 +9,13 @@ import {
   getErrors,
   loadCurrentUser,
   isGuest,
+  isLoggedIn,
 } from "./middleware.js";
-import { todoValidator, registerValidator } from "./validators.js";
+import {
+  todoValidator,
+  registerValidator,
+  loginValidator,
+} from "./validators.js";
 import cookieParser from "cookie-parser";
 import {
   detailPage,
@@ -22,7 +27,13 @@ import {
   setOrder,
   addendumWrapper,
 } from "./controllers/todos.js";
-import { registerPage, register } from "./controllers/users.js";
+import {
+  registerPage,
+  register,
+  loginPage,
+  login,
+  logout,
+} from "./controllers/users.js";
 import { error500Handler, mainErrorHandler } from "./error-handlers.js";
 import session from "express-session";
 import _FileStore from "session-file-store";
@@ -65,6 +76,10 @@ router.use(logger);
 router.use(putRequestToContext);
 router.get("/register", isGuest, getErrors, registerPage);
 router.post("/register", isGuest, registerValidator, handleErrors, register);
+router.get("/login", isGuest, getErrors, loginPage);
+router.post("/login", isGuest, loginValidator, handleErrors, login);
+router.use(isLoggedIn);
+router.post("/logout", logout);
 router.get("/add", getErrors, addItem);
 router.get("/:id", detailPage);
 router.get("/", mainPage);
