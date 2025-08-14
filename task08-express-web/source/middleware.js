@@ -35,3 +35,16 @@ export async function getErrors(req, res, next) {
   res.locals.body = (await req.getFlash("body")) || {};
   next();
 }
+
+export const loadCurrentUser = (req, _, next) => {
+  req.user = req.session.user;
+  next();
+};
+
+export const isGuest = (req, res, next) => {
+  if (req.user) {
+    res.redirect("/");
+  } else {
+    next();
+  }
+};

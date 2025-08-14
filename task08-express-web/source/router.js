@@ -7,8 +7,10 @@ import {
   handleErrors,
   extendFlashAPI,
   getErrors,
+  loadCurrentUser,
+  isGuest,
 } from "./middleware.js";
-import { todoValidator } from "./validators.js";
+import { todoValidator, registerValidator } from "./validators.js";
 import cookieParser from "cookie-parser";
 import {
   detailPage,
@@ -20,6 +22,7 @@ import {
   setOrder,
   addendumWrapper,
 } from "./controllers/todos.js";
+import { registerPage, register } from "./controllers/users.js";
 import { error500Handler, mainErrorHandler } from "./error-handlers.js";
 import session from "express-session";
 import _FileStore from "session-file-store";
@@ -57,8 +60,11 @@ router.use(
 // привяка посредника, который с использованием привязанного выше посредника , обрабатывающего сессии, будет обрабатывать всплывающие сообщения
 router.use(flash({ sessionKeyName: "flash-message" }));
 router.use(extendFlashAPI);
+router.use(loadCurrentUser);
 router.use(logger);
 router.use(putRequestToContext);
+router.get("/register", isGuest, getErrors, registerPage);
+router.post("/register", isGuest, registerValidator, handleErrors, register);
 router.get("/add", getErrors, addItem);
 router.get("/:id", detailPage);
 router.get("/", mainPage);
